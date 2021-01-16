@@ -187,7 +187,7 @@ void pstdout()
 	fflush(stdout);
 }
 
-{void statusloop()
+void statusloop()
 {
 	setupsignals();
 	int i = 0;
@@ -214,8 +214,6 @@ void sighandler(int signum)
 	getsigcmds(signum-SIGPLUS);
 	writestatus();
 }
-
-
 
 void termhandler()
 {
