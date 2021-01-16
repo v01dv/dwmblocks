@@ -170,6 +170,13 @@ int setupX()
 	root = RootWindow(dpy, screen);
 	return 1;
 }
+
+void buttonhandler(int sig, siginfo_t *si, void *ucontext)
+{
+	*button = '0' + si->si_value.sival_int & 0xff;
+	getsigcmds(si->si_value.sival_int >> 8);
+	writestatus();
+}
 #endif
 
 void pstdout()
@@ -180,8 +187,7 @@ void pstdout()
 	fflush(stdout);
 }
 
-
-void statusloop()
+{void statusloop()
 {
 	setupsignals();
 	int i = 0;
@@ -209,12 +215,7 @@ void sighandler(int signum)
 	writestatus();
 }
 
-void buttonhandler(int sig, siginfo_t *si, void *ucontext)
-{
-	*button = '0' + si->si_value.sival_int & 0xff;
-	getsigcmds(si->si_value.sival_int >> 8);
-	writestatus();
-}
+
 
 void termhandler()
 {
