@@ -28,6 +28,7 @@ typedef struct {
 void dummysighandler(int num);
 #endif
 void sighandler(int num);
+void buttonhandler(int sig, siginfo_t *si, void *ucontext);
 void getcmds(int time);
 void getsigcmds(unsigned int signal);
 void setupsignals();
