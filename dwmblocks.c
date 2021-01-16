@@ -65,6 +65,7 @@ void getcmd(const Block *block, char *output)
 		output++;
 	}
 	strcpy(output, block->icon);
+	char *cmd = block->command;
 	FILE *cmdf;
 	if (*button)
 	{
@@ -204,6 +205,13 @@ void dummysighandler(int signum)
 void sighandler(int signum)
 {
 	getsigcmds(signum-SIGPLUS);
+	writestatus();
+}
+
+void buttonhandler(int sig, siginfo_t *si, void *ucontext)
+{
+	*button = '0' + si->si_value.sival_int & 0xff;
+	getsigcmds(si->si_value.sival_int >> 8);
 	writestatus();
 }
 
