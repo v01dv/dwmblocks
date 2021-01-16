@@ -52,14 +52,31 @@ static void (*writestatus) () = pstdout;
 
 static char statusbar[LENGTH(blocks)][CMDLENGTH] = {0};
 static char statusstr[2][STATUSLENGTH];
+static char button[] = "\0";
 static int statusContinue = 1;
 static int returnStatus = 0;
 
 //opens process *cmd and stores output in *output
 void getcmd(const Block *block, char *output)
 {
+	if (block->signal)
+	{
+		output[0] = block->signal;
+		output++;
+	}
 	strcpy(output, block->icon);
-	FILE *cmdf = popen(block->command, "r");
+	FILE *cmdf;
+	if (*button)
+	{
+		setenv("BUTTON", button, 1);
+		cmdf = popen(cmd,"r");
+		*button = '\0';
+		unsetenv("BUTTON");
+	}
+	else
+	{
+		cmdf = popen(cmd,"r");
+	}
 	if (!cmdf)
 		return;
 	int i = strlen(block->icon);
@@ -108,11 +125,17 @@ void setupsignals()
         signal(i, dummysighandler);
 #endif
 
+	struct sigaction sa;
 	for (unsigned int i = 0; i < LENGTH(blocks); i++) {
-		if (blocks[i].signal > 0)
+		if (blocks[i].signal > 0) 
+		{
 			signal(SIGMINUS+blocks[i].signal, sighandler);
+			sigaddset(&sa.sa_mask, SIGRTMIN+blocks[i].signal); // ignore signal when handling SIGUSR1
+		}
 	}
-
+	sa.sa_sigaction = buttonhandler;
+	sa.sa_flags = SA_SIGINFO;
+	sigaction(SIGUSR1, &sa, NULL);
 }
 
 int getstatus(char *str, char *last)
