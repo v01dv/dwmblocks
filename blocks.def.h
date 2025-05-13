@@ -4,7 +4,7 @@ static const Block blocks[] = {
   // {"",      "sb-nettraf",       1,  16},
   // {"",      "sb-internet",      5,  4},
   // {"",      "sb-music",         0,  11},
-  {" ",     "sb-kb-icon",       0,  30},
+  // {" ",     "sb-kb-icon",       0,  30},
   {"├─",    "",                 0,  0},
   {"",      "sb-iplocale",      5, 16},
   {"",      "sb-fan",           5,  17},

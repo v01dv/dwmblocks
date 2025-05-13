@@ -204,8 +204,8 @@ int main(int argc, char** argv)
 #endif
 	delimLen = MIN(delimLen, strlen(delim));
 	delim[delimLen++] = '\0';
-	signal(SIGTERM, termhandler);
-	signal(SIGINT, termhandler);
+	signal(SIGTERM, (void*)(&termhandler));
+	signal(SIGINT, (void*)(&termhandler));
 	statusloop();
 #ifndef NO_X
 	XCloseDisplay(dpy);
